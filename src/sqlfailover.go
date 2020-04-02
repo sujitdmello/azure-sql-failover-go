@@ -11,17 +11,17 @@ import (
 )
 
 var server string
-var database string
 var subid string
 var resgroup string
+var failovergroup string
 
-// https://godoc.org/github.com/Azure/azure-sdk-for-go/services/preview/sql/mgmt/v3.0/sql#DatabasesClient.Failover
+// https://github.com/Azure/azure-sdk-for-go/blob/master/services/preview/sql/mgmt/v3.0/sql/failovergroups.go
 // The only available documentation on calling this API.
 func main() {
 
 	var err error
-	if len(os.Args) < 4 {
-		log.Fatal("Usage: sqlfailover <resource-group> <server> <database> <primary/secondary>")
+	if len(os.Args) < 3 {
+		log.Fatal("Usage: sqlfailover <resource-group> <server> <failover-group>")
 		os.Exit(1)
 	}
 	temp := os.Getenv("AZURE_SUBSCRIPTION_ID")
@@ -51,29 +51,20 @@ func main() {
 
 	resgroup = os.Args[1]
 	server = os.Args[2]
-	database = os.Args[3]
+	failovergroup = os.Args[3]
 
 	// Create auth token from env variables (see here for details https://github.com/Azure/azure-sdk-for-go)
 	authorizer, err := auth.NewAuthorizerFromEnvironment()
 	if err == nil {
-		// Create AzureSQL SDK client
-		dbclient := sqlsdk.NewDatabasesClient(subid)
+		// Create AzureSQL SQL Failover Groups client
+		dbclient := sqlsdk.NewFailoverGroupsClient(subid)
 		dbclient.Authorizer = authorizer
-		var mode sqlsdk.ReplicaType
-		if os.Args[4] == "primary" {
-			mode = "Primary"
-		} else if os.Args[4] == "secondary" {
-			mode = "ReadableSecondary"
-		} else {
-			log.Fatal("Invalid ReplicaType, must be primary or secondary")
-			os.Exit(3)
-		}
+
 		ctx := context.Background()
-		future, err := dbclient.Failover(ctx, resgroup, server, database, mode)
+		dbclient.Failover(ctx, resgroup, server, failovergroup)
 		if err != nil {
 			fmt.Println(err.Error())
 		} else {
-			err = future.WaitForCompletionRef(ctx, dbclient.Client)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
