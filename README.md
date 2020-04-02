@@ -1,5 +1,5 @@
 # azure-sql-failover-go
-Utility to failover an Azure SQL database that is part of a failover group using Go. I published this snippet of code as there did not seem to be any sample for Go that showed Azure SQL failover groups and it took some digging to figure it out.
+Utility to failover an Azure SQL database that is part of a failover group using Go. I published this snippet of code as there did not seem to be any sample for Go that showed Azure SQL failover groups and it took some digging to figure it out. The utility is useful when trying to do these operations from a Terraform script.
 
 ## Calling the utility
 
