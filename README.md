@@ -1,5 +1,5 @@
 # azure-sql-failover-go
-Utility to failover an Azure SQL database to the secondary region using Go. I published this snippet of code as there did not seem to be any sample for Go that did the Azure SQL failover and it took some digging to figure it out.
+Utility to failover an Azure SQL database that is part of a failover group using Go. I published this snippet of code as there did not seem to be any sample for Go that showed Azure SQL failover groups and it took some digging to figure it out.
 
 ## Calling the utility
 
@@ -16,10 +16,9 @@ Utility to failover an Azure SQL database to the secondary region using Go. I pu
 
 | Parameter position | Description |
 |-----------|-------------|
-| 1 | Resource Group |
-| 2 | Database Server Name |
-| 3 | Database Name |
-| 4 | primary/secondary (failover mode) |
+| 1 | Resource Group Name |
+| 2 | Database Server Name (the server in the group which will become Primary) |
+| 3 | Failover group name |
 
 ## Building the code
 
